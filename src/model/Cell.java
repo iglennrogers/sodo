@@ -1,6 +1,7 @@
 package model;
 
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class Cell {
         for (int i = 1; i <= Board.SIZE; i++) {
 
             _possibilities.add(i);
+            _colour = Color.BLUE;
         }
     }
 
@@ -90,6 +92,15 @@ public class Cell {
         return false;
     }
 
+    public void set_colour(Color col) {
+
+        _colour = col;
+    }
+
+    public Color get_colour() {
+
+        return _colour;
+    }
 
     public boolean has_possibility(final int v) {
 
@@ -117,7 +128,7 @@ public class Cell {
         }
     }
 
-
+    Color _colour;
     final int _col;
     final int _row;
     final int _sq;

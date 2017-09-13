@@ -179,6 +179,6 @@ public class Sodo {
 
 
     private final Board _board = new Board();
-    private final Stack<Command> _undo_stack = new Stack<Command>();
+    private final Stack<Command> _undo_stack = new Stack<>();
     private final MainWindow _view;
 }

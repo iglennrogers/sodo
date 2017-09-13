@@ -4,16 +4,13 @@ package view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Set;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import model.Cell;
 import model.Command;
@@ -28,6 +25,8 @@ public class CellView extends JLabel {
         _cell = cell;
         _controller = controller;
         _view = view;
+        _cell.set_colour(Color.BLUE);
+
         setForeground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.WHITE));
         setOpaque(true);
@@ -88,7 +87,7 @@ public class CellView extends JLabel {
             setFont(new Font("Arial", Font.PLAIN, 16));
             if (_view.any_highlight()) {
 
-                setForeground(Color.CYAN);
+                setForeground(Color.BLACK);
             }
             else {
 
@@ -110,11 +109,11 @@ public class CellView extends JLabel {
 
         if (_selected) {
 
-            setBackground(new Color(64, 64, 255));
+            setBackground(_cell.get_colour().darker());
         }
         else {
 
-            setBackground(Color.BLUE);
+            setBackground(_cell.get_colour());
         }
     }
 
@@ -152,34 +151,40 @@ public class CellView extends JLabel {
                 final JMenuItem item = new JMenuItem(action);
                 menu.add(item);
             }
-            // menu.add(new JSeparator());
+            menu.add(new JSeparator());
         }
-        /*
-         * if (vals.size() < Board.SIZE) {
-         * 
-         * final JMenuItem title = new JMenuItem("Add");
-         * title.setEnabled(false); menu.add(title);
-         * 
-         * for (int i = 1; i < (Board.SIZE + 1); i++) {
-         * 
-         * if (!vals.contains(i)) {
-         * 
-         * final CellAction action = new CellAction(_controller, _cell,
-         * ((Integer) i).toString()); action.putValue("action",
-         * Command.CommandType.AddPossibility); final JMenuItem item = new
-         * JMenuItem(action); menu.add(item); } } menu.add(new JSeparator()); }
-         * 
-         * { final CellAction action = new CellAction(_controller, _cell,
-         * "Clear"); action.putValue("action", Command.CommandType.Reset); final
-         * JMenuItem item = new JMenuItem(action); menu.add(item); }
-         */
+
+        final JMenuItem title = new JMenuItem("Colour");
+        title.setEnabled(false);
+        menu.add(title);
+
+        menu.add(create_colour_menu("Blue", Color.BLUE));
+        menu.add(create_colour_menu("Green", Color.GREEN));
+        menu.add(create_colour_menu("Magenta", Color.MAGENTA));
+
         return menu;
     }
 
+    private JMenuItem create_colour_menu(String label, Color col)
+    {
+        final AbstractAction action = new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                _cell.set_colour(col);
+                repaint();
+            }
+        };
+
+        JMenuItem item = new JMenuItem(action);
+        item.setText(label);
+        return item;
+    }
 
     private String create_numbers() {
 
-        String s = new String();
+        String s = "";
         for (final Integer v : _cell.get_possibilities()) {
 
             if (_view.has_highlight(v.intValue())) {
@@ -209,7 +214,6 @@ public class CellView extends JLabel {
 
         _selected = sel;
     }
-
 
     private final Cell _cell;
     private final Sodo _controller;
